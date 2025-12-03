@@ -12,7 +12,7 @@ async function loadStories() {
     .sort((a, b) => b.nutCount - a.nutCount) // hottest first
     .forEach(story => {
       const card = document.createElement('a');
-      card.href = `stories/${story.id}.html`; // we’ll auto-convert .md → .html later
+      card.href = `stories/${story.id}.md`; // we’ll auto-convert .md → .html later
       card.className = "block p-6 mb-4 bg-zinc-900 rounded-lg border border-zinc-800 hover:border-red-800 transition";
       
       card.innerHTML = `
