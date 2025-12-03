@@ -1,1 +1,110 @@
+/* css/style.css – pure sex in 150 lines */
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.0/dist/tailwind.min.css" rel="stylesheet">
 
+/* If you don't wanna use Tailwind CDN (lazy mode), uncomment the block below instead */
+/*
+@import url('https://cdn.jsdelivr.net/npm/tailwindcss@3.4.0/dist/tailwind.min.css');
+*/
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #000;
+  color: #e5e7eb;
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  line-height: 1.6;
+}
+
+/* Custom scrollbar – because even the scrollbar should look like it’s been used */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #111;
+}
+::-webkit-scrollbar-thumb {
+  background: #991b1b;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #ef4444;
+}
+
+/* Story cards */
+.story-card {
+  background: #0a0a0a;
+  border: 1px solid #27272a;
+  transition: all 0.3s ease;
+}
+.story-card:hover {
+  border-color: #ef4444;
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgba(239, 68, 68, 0.2);
+}
+
+/* Tags – glowing little pills of sin */
+.tag {
+  @apply px-3 py-1 bg-red-900/50 rounded-full text-xs font-medium border border-red-800/50 transition;
+}
+.tag:hover {
+  @apply bg-red-800/80 border-red-600;
+}
+
+/* Individual story page – big readable fucktext */
+.story-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  font-size: 1.15rem;
+  line-height: 1.9;
+}
+.story-content h1 {
+  @apply text-4xl font-bold text-red-500 mb-8 mt-12;
+}
+.story-content h2 {
+  @apply text-2xl font-bold text-red-400 mt-10 mb-4;
+}
+.story-content p {
+  @apply mb-6 text-gray-200;
+}
+.story-content strong {
+  @apply text-red-300;
+}
+
+/* Nut counter – the most important metric on the entire site */
+.nut-counter {
+  @apply inline-flex items-center gap-2 px-4 py-2 bg-red-900/30 rounded-lg border border-red-800/50;
+}
+.nut-counter span {
+  @apply text-2xl;
+}
+
+/* Header glow */
+header {
+  box-shadow: 0 10px 30px -10px rgba(239, 68, 68, 0.3);
+}
+
+/* Little cum-drip animation for the total nuts in header (because we’re extra) */
+@keyframes drip {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
+}
+#totalNuts {
+  animation: drip 3s infinite ease-in-out;
+}
+
+/* Mobile fixes */
+@screen sm {
+  .story-content {
+    padding: 3rem 1.5rem;
+    font-size: 1.25rem;
+  }
+}
+
+/* Print-friendly if someone’s truly depraved */
+@media print {
+  body { background: white; color: black; }
+  .tag { border: 1px solid #ccc; background: #f0f0f0; }
+}
