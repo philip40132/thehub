@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LiteroticaHub – Loading filth...</title>
+  <meta name="description" content="One click away from the nastiest story you've ever read." />
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+  <!-- Marked.js for Markdown → HTML -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <!-- Our Pornhub-style CSS (same file you already have) -->
+  <link href="css/style.css" rel="stylesheet" />
+</head>
+<body class="bg-black text-gray-100">
+
+  <!-- Fixed Pornhub Header -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-[#1f1f1f] border-b-4 border-orange-600 shadow-2xl">
+    <div class="header-inner max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="/" class="logo text-3xl font-black text-white">Literotica<span class="text-orange-600">Hub</span></a>
+      <a href="/" class="text-orange-500 hover:text-orange-400 text-sm font-bold flex items-center gap-2">
+        <i class="fas fa-arrow-left"></i> Back to all stories
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Story Container -->
+  <div class="pt-28 pb-20 max-w-4xl mx-auto px-6">
+    <article class="story-page bg-[#141414] rounded-2xl border border-[#333] shadow-2xl overflow-hidden">
+
+      <!-- Fake Video Thumbnail (looks exactly like PH) -->
+      <div class="thumb relative h-96 bg-gradient-to-br from-zinc-900 to-black flex items-center justify-center overflow-hidden">
+        <div class="text-center z-10 px-10">
+          <h1 id="title" class="text-5xl md:text-6xl font-black text-white drop-shadow-2xl leading-tight"></h1>
+          <p class="text-orange-500 text-xl mt-4 font-bold" id="summary"></p>
+        </div>
+        <!-- Big fake play button -->
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div class="bg-white/20 backdrop-blur-md rounded-full p-12 md:p-20 border-8 border-white/30">
+            <i class="fas fa-play text-white text-6xl md:text-8xl ml-4"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Story Meta Bar -->
+      <div class="bg-[#1a1a1a] border-b border-[#333] px-8 py-6 flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-6 text-sm">
+          <span class="text-gray-400">by <span id="author" class="text-orange-500 font-bold">Anon</span></span>
+          <span id="date" class="text-gray-500"></span>
+        </div>
+        <div class="flex items-center gap-6">
+          <div class="nuts text-orange-500 font-bold text-2xl">
+            <span id="nutCount">0</span> <span class="text-4xl">💦</span>
+          </div>
+          <button onclick="nutBust()" class="bg-orange-600 hover:bg-orange-500 px-8 py-3 rounded-full font-bold text-lg transition shadow-lg">
+            I just busted 💦
+          </button>
+        </div>
+      </div>
+
+      <!-- Tags -->
+      <div class="px-8 py-5 flex flex-wrap gap-3">
+        <div id="tags"></div>
+      </div>
+
+      <!-- Actual Story Content -->
+      <div class="content px-8 py-12 text-lg md:text-xl leading-relaxed" id="content">
+        <div class="text-center py-20">
+          <i class="fas fa-spinner fa-spin text-6xl text-orange-600"></i>
+          <p class="mt-6 text-2xl">Loading the depravity...</p>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <script>
+    // Nut counter click
+    function nutBust() {
+      let count = parseInt(localStorage.getItem(location.search) || '0') + 1;
+      localStorage.setItem(location.search, count);
+      document.getElementById('nutCount').textContent = count.toLocaleString();
+    }
+
+    // Load story
+    const params = new URLSearchParams(location.search);
+    const id = params.get('id');
+    if (!id) location.href = '/';
+
+    fetch(`stories/${id}.md`)
+      .then(r => { if (!r.ok) throw ''; return r.text(); })
+      .then(md => {
+        const lines = md.trim().split('\n');
+        const title = lines[0].replace(/^#\s*/, '');
+        const tagsLine = lines.find(l => l.toLowerCase().includes('tags:')) || '';
+        const tags = tagsLine.replace(/.*tags:/i, '').replace(/[*#]/g, '').split(',').map(t => t.trim()).filter(Boolean);
+
+        document.title = title + ' – LiteroticaHub';
+        document.getElementById('title').textContent = title;
+        document.getElementById('author').textContent = 'Anon'; // you can parse author later
+        document.getElementById('date').textContent = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+        // Fake summary (first sentence after title)
+        const firstPara = lines.slice(2).join('\n').split('\n\n')[0].trim();
+        document.getElementById('summary').textContent = firstPara.slice(0, 120) + (firstPara.length > 120 ? '…' : '');
+
+        // Render markdown
+        const html = marked.parse(md.split('\n').slice(1).join('\n')); // skip title
+        document.getElementById('content').innerHTML = html;
+
+        // Tags
+        const tagsDiv = document.getElementById('tags');
+        tags.forEach(tag => {
+          const span = document.createElement('span');
+          span.className = 'tag';
+          span.textContent = tag;
+          tagsDiv.appendChild(span);
+        });
+
+        // Load saved nuts
+        const saved = localStorage.getItem(location.search);
+        if (saved) document.getElementById('nutCount').textContent = parseInt(saved).toLocaleString();
+      })
+      .catch(() => {
+        document.getElementById('content').innerHTML = `<p class="text-center text-3xl py-20 text-red-500">Story not found. GitHub is judging you.</p>`;
+      });
+  </script>
+</body>
+</html>
